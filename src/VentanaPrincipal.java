@@ -1,5 +1,6 @@
 
 import java.io.File;
+import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -33,7 +34,22 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             return;
         }
         if (archivoSql.leerArchivo()) {
-            JOptionPane.showMessageDialog(null, "El archivo fue leido exitosamente");
+            
+            if (archivoSql.obtenerInformacionSentencia()) {
+                ArrayList<TablaSql> lista = archivoSql.getVectorTabla();
+                String tablas = "Numero de tablas " + lista.size() + "\n";
+                for (TablaSql tablaSql : lista) {
+                    tablas += "Nombre :\n" + tablaSql.getNombre() + "\n Atributos :\n";
+                    String[] atributos = tablaSql.getAtributosAsArray();
+                    for (int i = 0; i < atributos.length; i++) {
+                        tablas += atributos[i] + "\n";
+                    }
+                    tablas += "Extras :\n" + tablaSql.getExtras() + "\n";
+                    
+                } 
+                JOptionPane.showMessageDialog(null, tablas);
+            }
+            JOptionPane.showMessageDialog(null, "El archivo fue leido exitosamete");
         } else {
             JOptionPane.showMessageDialog(null, "El archivo no puedo ser leido");
         }
@@ -97,8 +113,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        lblNombreArchivo.setText("ejemploArchivo.sql");
-
         javax.swing.GroupLayout panelAbrirArchivoLayout = new javax.swing.GroupLayout(panelAbrirArchivo);
         panelAbrirArchivo.setLayout(panelAbrirArchivoLayout);
         panelAbrirArchivoLayout.setHorizontalGroup(
@@ -118,7 +132,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAbrirArchivoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblNombreArchivo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(btnAbrirArchivo)
                 .addContainerGap())
         );

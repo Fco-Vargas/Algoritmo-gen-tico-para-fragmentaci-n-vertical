@@ -23,6 +23,7 @@ public class ArchivoSql {
     private String sentenciaTabla = "";
     
     private ArrayList<String> vectorSentenciaTabla = null;
+    private ArrayList<TablaSql> vectorTabla = null;
     
     public boolean AgregarArchivo(File archivoSql) {
         if (archivoSql.exists()) {
@@ -50,8 +51,9 @@ public class ArchivoSql {
                     linea = linea.toLowerCase();  
                     formarSentenciaTabla();
                 }
+                bufferReader.close();
                 return true;
-            } catch (IOException ex) {
+            } catch (IOException ex) {                
                 ex.getMessage();
             }
         }
@@ -91,23 +93,32 @@ public class ArchivoSql {
         if (vectorSentenciaTabla.size() <= 0) {
             return false;
         }
+        vectorTabla = new ArrayList<>();
         for (String sentenciaSql : vectorSentenciaTabla) {
             obtenerNombreTabla(sentenciaSql);
             obtenerAtributoTabla(sentenciaSql);
             obtenerExtrasTabla(sentenciaSql);
+            getVectorTabla().add(new TablaSql(nombreTabla, atributos, extras));
+            nombreTabla = "";
+            atributos = "";
+            extras = "";
         }
         return true;
-    } 
+    }
     
     private void obtenerNombreTabla(String sentenciaSql) {
-        
+        nombreTabla = sentenciaSql.substring(0,sentenciaSql.indexOf("(")).trim();
     }
     
     private void obtenerAtributoTabla(String sentenciaSql) {
-       
+       atributos = sentenciaSql.substring(sentenciaSql.indexOf("(") + 1,sentenciaSql.lastIndexOf(")")).trim();
     }
     
     private void obtenerExtrasTabla(String sentenciaSql) {
-        
+        extras = sentenciaSql.substring(sentenciaSql.lastIndexOf(")") + 1).trim();
+    }
+
+    public ArrayList<TablaSql> getVectorTabla() {
+        return vectorTabla;
     }
 }
